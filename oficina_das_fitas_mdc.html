@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oficina das Fitas — Jogo do MDC</title>
+  <style>
+    :root{
+      --bg:#f7f6f1;
+      --paper:#ffffff;
+      --ink:#24302b;
+      --muted:#66726c;
+      --line:#d9ded8;
+      --accent:#466b5a;
+      --accent-2:#b88647;
+      --good:#2f7b4f;
+      --bad:#a84f4f;
+      --soft:#eef3ef;
+      --shadow:0 14px 40px rgba(35,48,43,.10);
+      --radius:24px;
+      --unit:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(70,107,90,.08), transparent 30%),
+        radial-gradient(circle at top right, rgba(184,134,71,.08), transparent 28%),
+        var(--bg);
+      color:var(--ink);
+      min-height:100vh;
+    }
+    button, input{font:inherit}
+    button{cursor:pointer}
+    .app-shell{max-width:1180px;margin:0 auto;padding:20px}
+    .topbar{
+      display:flex;gap:12px;justify-content:space-between;align-items:center;
+      padding:10px 0 18px;
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center;font-weight:900;letter-spacing:-.02em
+    }
+    .brand-badge{
+      width:44px;height:44px;border-radius:14px;background:var(--accent);color:white;
+      display:grid;place-items:center;font-size:22px;box-shadow:var(--shadow)
+    }
+    .top-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{
+      border:0;border-radius:14px;padding:12px 16px;font-weight:800;
+      background:var(--paper);color:var(--ink);box-shadow:0 4px 18px rgba(0,0,0,.05);
+      transition:.18s ease;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn.primary{background:var(--accent);color:white}
+    .btn.secondary{background:var(--accent-2);color:white}
+    .btn.ghost{background:transparent;box-shadow:none;border:1px solid var(--line)}
+    .btn.danger{background:#fff1f1;color:var(--bad);border:1px solid #f1cccc}
+    .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+    .screen{display:none}
+    .screen.active{display:block}
+    .hero{
+      background:var(--paper);border-radius:32px;padding:44px;box-shadow:var(--shadow);
+      display:grid;grid-template-columns:1.2fr .8fr;gap:34px;align-items:center;overflow:hidden;
+      position:relative;
+    }
+    .hero:after{
+      content:"";position:absolute;right:-80px;bottom:-100px;width:320px;height:320px;border-radius:50%;
+      background:rgba(70,107,90,.06)
+    }
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(2.6rem,7vw,5.5rem);line-height:.92;letter-spacing:-.055em;margin-bottom:22px}
+    .subtitle{font-size:1.25rem;line-height:1.55;color:var(--muted);max-width:680px}
+    .hero-card{
+      position:relative;z-index:1;background:var(--soft);padding:24px;border-radius:24px;border:1px solid #dfe8e1
+    }
+    .hero-card .mini-ribbon{margin:12px 0}
+    .mini-ribbon{
+      height:28px;border-radius:9px;display:flex;overflow:hidden;border:1px solid rgba(0,0,0,.08)
+    }
+    .mini-ribbon span{flex:1;border-right:1px solid rgba(255,255,255,.7)}
+    .mini-ribbon span:last-child{border-right:0}
+    .r1 span{background:#6a8d7a}
+    .r2 span{background:#c49a6c}
+    .r3 span{background:#8a7fa8}
+    .hero-buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .section-card{
+      background:var(--paper);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:18px
+    }
+    .progress-wrap{display:flex;gap:8px;align-items:center;overflow-x:auto;padding-bottom:4px}
+    .level-dot{
+      min-width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:white;
+      display:grid;place-items:center;font-weight:900;color:var(--muted);position:relative
+    }
+    .level-dot.done{background:#eaf6ee;border-color:#78ae8c;color:var(--good)}
+    .level-dot.current{border-color:var(--accent);box-shadow:0 0 0 4px rgba(70,107,90,.12);color:var(--accent)}
+    .level-dot.locked{opacity:.35}
+    .game-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:18px}
+    .challenge-header{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}
+    .eyebrow{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;font-weight:900;color:var(--accent)}
+    .challenge-title{font-size:clamp(1.6rem,3vw,2.4rem);letter-spacing:-.03em;margin-bottom:6px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--soft);
+      color:var(--accent);font-weight:800;font-size:.88rem
+    }
+    .mission{
+      background:#fbfaf6;border:1px dashed #d7c7ab;border-radius:18px;padding:16px 18px;margin-bottom:18px
+    }
+    .ribbons{display:grid;gap:14px}
+    .ribbon-row{
+      display:grid;grid-template-columns:78px 1fr;gap:12px;align-items:center
+    }
+    .ribbon-label{font-weight:900;color:var(--muted)}
+    .ribbon-track{
+      display:flex;flex-wrap:wrap;gap:3px;padding:8px;border-radius:16px;background:#f5f5f2;border:1px solid var(--line);
+      min-height:50px;align-content:center
+    }
+    .unit{
+      width:var(--unit);height:28px;border-radius:4px;display:inline-block;position:relative;
+      background:var(--ribbon-color,#6f927f);box-shadow:inset 0 -2px rgba(0,0,0,.06);
+      transition:transform .25s ease, opacity .25s ease, outline-color .25s ease;
+    }
+    .unit.group-end{margin-right:9px}
+    .unit.remainder{
+      outline:3px solid #cf6666;
+      transform:translateY(-2px);
+      animation:pulse .9s ease-in-out infinite alternate;
+    }
+    .scale-unit{
+      width:var(--unit);height:28px;border-radius:4px;display:inline-block;position:relative;
+      background:var(--ribbon-color,#6f927f);box-shadow:inset 0 -2px rgba(0,0,0,.08)
+    }
+    .scale-unit.partial{background:repeating-linear-gradient(135deg,var(--ribbon-color,#6f927f),var(--ribbon-color,#6f927f) 5px,rgba(255,255,255,.35) 5px,rgba(255,255,255,.35) 8px)}
+    .scale-note{
+      margin:2px 0 8px 90px;padding:10px 12px;border-radius:12px;background:#f7f3e9;color:#765a2e;
+      font-size:.84rem;line-height:1.4;border:1px solid #eadcbc
+    }
+    .ribbon-result{margin-left:90px}
+    .cut-overview{
+      display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:8px;padding:10px 12px;
+      border-radius:13px;background:#fafaf7;border:1px dashed var(--line)
+    }
+    .cut-piece{
+      min-width:28px;height:27px;padding:0 7px;border-radius:7px;background:var(--ribbon-color,#6f927f);color:#fff;
+      display:grid;place-items:center;font-size:.72rem;font-weight:900;box-shadow:inset 0 -2px rgba(0,0,0,.12)
+    }
+    .cut-piece.remainder{background:#fff0f0;color:var(--bad);border:2px solid #cf6666;box-shadow:none}
+    .cut-ellipsis{font-weight:900;color:var(--muted);padding:0 2px}
+    .cut-summary{flex-basis:100%;font-size:.82rem;color:var(--muted);font-weight:700;margin-top:2px}
+    @keyframes pulse{to{filter:brightness(1.1)}}
+    .result-strip{
+      margin-top:10px;padding:11px 13px;border-radius:13px;font-weight:800;display:none
+    }
+    .result-strip.show{display:block}
+    .result-strip.good{background:#edf8f0;color:var(--good)}
+    .result-strip.bad{background:#fff0f0;color:var(--bad)}
+    .control-card h3{margin-bottom:8px}
+    .size-picker{
+      display:grid;grid-template-columns:48px 1fr 48px;gap:10px;align-items:center;margin:18px 0
+    }
+    .step-btn{
+      width:48px;height:48px;border:0;border-radius:14px;background:var(--soft);font-weight:900;font-size:1.3rem;color:var(--accent)
+    }
+    .size-display{
+      text-align:center;border:2px solid var(--line);border-radius:16px;padding:10px 12px;background:white
+    }
+    .size-display input{
+      width:100%;max-width:120px;border:0;background:transparent;text-align:center;color:var(--ink);
+      font-size:2.4rem;font-weight:900;line-height:1;outline:0
+    }
+    .size-display span{font-size:.82rem;color:var(--muted)}
+    .jump-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-6px 0 14px}
+    .jump-controls .btn{padding:7px 10px;font-size:.82rem}
+    .quick-values{display:flex;gap:7px;flex-wrap:wrap;margin:-4px 0 16px}
+    .quick-values button{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:white;font-weight:800;color:var(--accent)}
+    .action-stack{display:grid;gap:10px}
+    .feedback{
+      margin-top:16px;border-radius:18px;padding:16px;background:#f7f8f7;border:1px solid var(--line);min-height:88px
+    }
+    .feedback strong{display:block;margin-bottom:5px}
+    .history{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .history-chip{
+      padding:7px 10px;border-radius:999px;background:#f0f2f0;font-size:.85rem;font-weight:800
+    }
+    .history-chip.ok{background:#eaf6ee;color:var(--good)}
+    .history-chip.no{background:#fff0f0;color:var(--bad)}
+    .stats{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px
+    }
+    .stat{
+      background:var(--soft);border-radius:15px;padding:12px;text-align:center
+    }
+    .stat b{display:block;font-size:1.3rem}
+    .stat span{font-size:.75rem;color:var(--muted)}
+    .lesson{
+      display:none;margin-top:18px;border-top:1px solid var(--line);padding-top:18px
+    }
+    .lesson.show{display:block}
+    .equations{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0
+    }
+    .equation{background:var(--soft);padding:12px;border-radius:14px;text-align:center;font-weight:900}
+    .divisor-grid{display:grid;gap:8px}
+    .divisor-line{padding:10px 12px;border-radius:12px;background:#f8f8f6}
+    .common{font-weight:900;color:var(--good)}
+    .phase-list{
+      display:grid;grid-template-columns:repeat(5,1fr);gap:12px
+    }
+    .phase-card{
+      padding:18px;border-radius:20px;border:1px solid var(--line);background:white;transition:.18s ease
+    }
+    .phase-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+    .phase-card.done{border-color:#8bb49b;background:#f4fbf6}
+    .phase-card h3{font-size:1.1rem;margin-bottom:8px}
+    .phase-card p{color:var(--muted);font-size:.9rem;min-height:44px}
+    .phase-card .numbers{font-weight:900;font-size:1.15rem}
+    .stars{letter-spacing:.08em}
+    .modal-backdrop{
+      position:fixed;inset:0;background:rgba(18,25,22,.5);display:none;place-items:center;padding:20px;z-index:50
+    }
+    .modal-backdrop.show{display:grid}
+    .modal{
+      width:min(720px,100%);max-height:90vh;overflow:auto;background:white;border-radius:28px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,.25)
+    }
+    .modal-header{display:flex;justify-content:space-between;gap:14px;align-items:center}
+    .icon-btn{border:0;background:var(--soft);width:40px;height:40px;border-radius:12px;font-weight:900}
+    .tutorial-steps{display:grid;gap:12px;margin:18px 0}
+    .tutorial-step{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start}
+    .step-number{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:white;font-weight:900}
+    .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .field label{display:block;font-size:.8rem;color:var(--muted);font-weight:800;margin-bottom:6px}
+    .field input{
+      width:100%;border:1px solid var(--line);border-radius:14px;padding:12px;font-weight:800;background:white
+    }
+    .random-options{display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-top:16px;padding:14px;border-radius:16px;background:var(--soft)}
+    .random-options label{display:grid;gap:6px;font-size:.82rem;font-weight:800;color:var(--muted)}
+    .random-options select{border:1px solid var(--line);border-radius:10px;background:white;padding:9px;font:inherit;color:var(--ink)}
+    .random-options .inline-check{display:flex;align-items:center;gap:8px;padding:8px 0;color:var(--ink);font-weight:700}
+    .random-options input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent)}
+    .teacher-options{display:grid;gap:10px;margin:18px 0}
+    .checkrow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border:1px solid var(--line);border-radius:14px}
+    .toggle{width:52px;height:30px;border-radius:999px;background:#cdd5d0;position:relative;border:0}
+    .toggle:after{content:"";position:absolute;width:24px;height:24px;border-radius:50%;background:white;top:3px;left:3px;transition:.2s}
+    .toggle.on{background:var(--accent)}
+    .toggle.on:after{left:25px}
+    .final-card{text-align:center;padding:48px 24px}
+    .trophy{font-size:4.6rem}
+    .final-card h2{font-size:3rem;letter-spacing:-.04em;margin:10px 0}
+    .final-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:620px;margin:24px auto}
+    .final-stat{background:var(--soft);border-radius:18px;padding:18px}
+    .final-stat b{font-size:1.8rem;display:block}
+    .hidden{display:none!important}
+    .tiny{font-size:.82rem;color:var(--muted)}
+    .center{text-align:center}
+    .kbd{
+      border:1px solid var(--line);border-bottom-width:3px;padding:2px 7px;border-radius:7px;background:white;font-size:.78rem
+    }
+    @media (max-width: 900px){
+      .hero,.game-grid{grid-template-columns:1fr}
+      .phase-list{grid-template-columns:repeat(2,1fr)}
+      .hero{padding:28px}
+      .topbar{align-items:flex-start}
+    }
+    @media (max-width: 600px){
+      .app-shell{padding:12px}
+      .brand span{display:none}
+      .top-actions .btn{padding:10px 12px}
+      .section-card{padding:18px}
+      .ribbon-row{grid-template-columns:1fr}
+      .ribbon-label{font-size:.88rem}
+      .scale-note{margin-left:0}
+      .ribbon-result{margin-left:0}
+      :root{--unit:14px}
+      .unit{height:24px}
+      .stats,.equations,.final-stats,.form-grid{grid-template-columns:1fr}
+      .phase-list{grid-template-columns:1fr}
+      h1{font-size:3.4rem}
+      .hero-card{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true">✂</div>
+        <span>Oficina das Fitas</span>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="howBtn">Como jogar</button>
+        <button class="btn ghost" id="levelsBtn">Fases</button>
+        <button class="btn ghost" id="teacherBtn">⚙ Professor</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="homeScreen" class="screen active">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">Jogo visual de matemática</div>
+            <h1>Oficina das Fitas</h1>
+            <p class="subtitle">
+              Descubra o <strong>maior pedaço que cabe exatamente em todos, sem deixar sobra</strong>.
+              Primeiro você experimenta. Depois a matemática ganha um nome.
+            </p>
+            <div class="hero-buttons">
+              <button class="btn primary" id="startBtn">▶ Começar</button>
+              <button class="btn secondary" id="freeBtn">🎲 Laboratório</button>
+              <button class="btn ghost" id="randomBtn">🎲 Desafio aleatório</button>
+            </div>
+            <p class="tiny" style="margin-top:16px">Funciona offline e salva seu progresso neste navegador.</p>
+          </div>
+          <div class="hero-card" aria-hidden="true">
+            <div class="pill">Exemplo visual</div>
+            <div style="margin-top:16px;font-weight:900">12 unidades</div>
+            <div class="mini-ribbon r1" id="heroRibbon1"></div>
+            <div style="font-weight:900">18 unidades</div>
+            <div class="mini-ribbon r2" id="heroRibbon2"></div>
+            <div style="font-weight:900">30 unidades</div>
+            <div class="mini-ribbon r3" id="heroRibbon3"></div>
+            <p class="tiny" style="margin-top:16px;margin-bottom:0">Qual tamanho de grupo funcionaria nas três?</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="levelsScreen" class="screen">
+        <div class="section-card">
+          <div class="challenge-header">
+            <div>
+              <div class="eyebrow">Trilha de aprendizagem</div>
+              <h2 class="challenge-title">10 cartas de desafio</h2>
+              <p class="subtitle" style="font-size:1rem">Avance das descobertas visuais até a linguagem formal do MDC.</p>
+            </div>
+            <button class="btn ghost" id="backHomeFromLevels">← Início</button>
+          </div>
+          <div class="phase-list" id="phaseList"></div>
+        </div>
+      </section>
+
+      <section id="gameScreen" class="screen">
+        <div class="section-card">
+          <div class="progress-wrap" id="progressWrap" aria-label="Progresso das fases"></div>
+        </div>
+
+        <div class="game-grid">
+          <div class="section-card">
+            <div class="challenge-header">
+              <div>
+                <div class="eyebrow" id="levelEyebrow">Fase 1</div>
+                <h2 class="challenge-title" id="challengeTitle">O maior pedaço comum</h2>
+                <div class="pill" id="difficultyPill">🟢 Iniciante</div>
+              </div>
+              <button class="btn ghost" id="backLevelsBtn">Fases</button>
+            </div>
+
+            <div class="mission">
+              <strong>Missão:</strong>
+              <span id="missionText"> escolha um tamanho de pedaço que divida as três fitas sem deixar sobra. Depois descubra o maior.</span>
+            </div>
+
+            <div class="ribbons" id="ribbons"></div>
+
+            <div class="lesson" id="lessonPanel"></div>
+          </div>
+
+          <aside class="section-card control-card">
+            <div class="eyebrow">Seu teste</div>
+            <h3>Escolha o tamanho do pedaço</h3>
+            <p class="tiny">Digite um valor ou use os botões. Em medidas grandes, use também os saltos de 10.</p>
+
+            <div class="size-picker">
+              <button class="step-btn" id="minusBtn" aria-label="Diminuir tamanho">−</button>
+              <label class="size-display" for="sizeInput">
+                <input id="sizeInput" type="number" min="1" value="2" inputmode="numeric" aria-label="Tamanho do pedaço" />
+                <span>unidades</span>
+              </label>
+              <button class="step-btn" id="plusBtn" aria-label="Aumentar tamanho">+</button>
+            </div>
+            <div class="jump-controls" aria-label="Ajustes rápidos">
+              <button class="btn ghost" id="minusTenBtn" aria-label="Diminuir dez unidades">−10</button>
+              <span class="tiny">ajustes rápidos</span>
+              <button class="btn ghost" id="plusTenBtn" aria-label="Aumentar dez unidades">+10</button>
+            </div>
+            <div class="quick-values" aria-label="Tamanhos sugeridos">
+              <button type="button" data-choice="1">1</button>
+              <button type="button" data-choice="2">2</button>
+              <button type="button" data-choice="5">5</button>
+              <button type="button" data-choice="10">10</button>
+            </div>
+
+            <div class="action-stack">
+              <button class="btn primary" id="testBtn">TESTAR CORTE</button>
+              <button class="btn secondary hidden" id="claimBtn">Acho que encontrei o maior</button>
+              <button class="btn ghost" id="hintBtn">💡 Dica</button>
+            </div>
+
+            <div class="feedback" id="feedback" aria-live="polite">
+              <strong>Observe as fitas.</strong>
+              Escolha um tamanho e faça seu primeiro teste.
+            </div>
+
+            <div class="history" id="history"></div>
+
+            <div class="stats">
+              <div class="stat"><b id="attemptsStat">0</b><span>tentativas</span></div>
+              <div class="stat"><b id="pointsStat">0</b><span>pontos</span></div>
+              <div class="stat"><b id="starsStat">☆ ☆ ☆</b><span>estrelas</span></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="finalScreen" class="screen">
+        <div class="section-card final-card">
+          <div class="trophy">🏆</div>
+          <div class="eyebrow">Trilha concluída</div>
+          <h2>Mestre das Medidas</h2>
+          <p class="subtitle" style="margin:0 auto;max-width:700px">
+            Você descobriu que o <strong>Máximo Divisor Comum</strong> é o maior número que divide dois ou mais números sem deixar resto.
+          </p>
+          <div class="final-stats">
+            <div class="final-stat"><b id="finalCompleted">10</b><span>fases concluídas</span></div>
+            <div class="final-stat"><b id="finalStars">0</b><span>estrelas</span></div>
+            <div class="final-stat"><b id="finalPoints">0</b><span>pontos</span></div>
+          </div>
+          <div class="hero-buttons" style="justify-content:center">
+            <button class="btn secondary" id="finalFreeBtn">🎲 Continuar no laboratório</button>
+            <button class="btn ghost" id="replayBtn">↻ Jogar novamente</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="tutorialModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+      <div class="modal-header">
+        <div>
+          <div class="eyebrow">Tutorial</div>
+          <h2 id="tutorialTitle">Como jogar</h2>
+        </div>
+        <button class="icon-btn" data-close="tutorialModal" aria-label="Fechar">×</button>
+      </div>
+      <div class="tutorial-steps">
+        <div class="tutorial-step"><div class="step-number">1</div><div><strong>Observe</strong><br><span class="tiny">Você recebe três fitas de tamanhos diferentes.</span></div></div>
+        <div class="tutorial-step"><div class="step-number">2</div><div><strong>Teste</strong><br><span class="tiny">Escolha um tamanho para dividir todas em grupos iguais.</span></div></div>
+        <div class="tutorial-step"><div class="step-number">3</div><div><strong>Veja as sobras</strong><br><span class="tiny">Se alguma fita deixar resto, aquele tamanho não funciona para todas.</span></div></div>
+        <div class="tutorial-step"><div class="step-number">4</div><div><strong>Encontre o maior</strong><br><span class="tiny">Quando um tamanho funcionar, investigue se existe outro ainda maior.</span></div></div>
+      </div>
+      <button class="btn primary" id="tutorialStartBtn">Começar desafio</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="freeModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="freeTitle">
+      <div class="modal-header">
+        <div>
+          <div class="eyebrow">Laboratório do MDC</div>
+          <h2 id="freeTitle">Crie seu próprio desafio</h2>
+        </div>
+        <button class="icon-btn" data-close="freeModal" aria-label="Fechar">×</button>
+      </div>
+      <p class="tiny">Use números entre 2 e 1.000. Até 100, a fita mostra blocos unitários; acima disso, o jogo usa uma escala comum e continua exibindo grupos e sobras com clareza.</p>
+      <div class="form-grid">
+        <div class="field"><label for="freeA">Número A</label><input id="freeA" type="number" min="2" max="1000" value="12"></div>
+        <div class="field"><label for="freeB">Número B</label><input id="freeB" type="number" min="2" max="1000" value="18"></div>
+        <div class="field"><label for="freeC">Número C</label><input id="freeC" type="number" min="2" max="1000" value="30"></div>
+      </div>
+      <div class="random-options">
+        <label for="randomLimit">Limite do desafio aleatório
+          <select id="randomLimit">
+            <option value="60">até 60 — visual</option>
+            <option value="100" selected>até 100 — visual</option>
+            <option value="300">até 300 — em escala</option>
+            <option value="1000">até 1.000 — em escala</option>
+          </select>
+        </label>
+        <label class="inline-check" for="randomAllowOne"><input id="randomAllowOne" type="checkbox"> incluir MDC = 1 (avançado)</label>
+      </div>
+      <div class="hero-buttons">
+        <button class="btn primary" id="createFreeBtn">Criar desafio</button>
+        <button class="btn secondary" id="randomFreeBtn">🎲 Gerar e jogar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="teacherModal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="teacherTitle">
+      <div class="modal-header">
+        <div>
+          <div class="eyebrow">Configurações</div>
+          <h2 id="teacherTitle">Professor / responsáveis</h2>
+        </div>
+        <button class="icon-btn" data-close="teacherModal" aria-label="Fechar">×</button>
+      </div>
+      <div class="teacher-options">
+        <div class="checkrow"><div><strong>Dicas</strong><div class="tiny">Permitir dicas progressivas.</div></div><button class="toggle on" id="toggleHints" aria-label="Ativar ou desativar dicas"></button></div>
+        <div class="checkrow"><div><strong>Pontuação</strong><div class="tiny">Mostrar pontos e bônus.</div></div><button class="toggle on" id="toggleScore" aria-label="Ativar ou desativar pontuação"></button></div>
+        <div class="checkrow"><div><strong>Mostrar linguagem formal</strong><div class="tiny">Exibir MDC, divisores e divisões após a descoberta.</div></div><button class="toggle on" id="toggleFormal" aria-label="Ativar ou desativar linguagem formal"></button></div>
+      </div>
+      <button class="btn danger" id="resetProgressBtn">Reiniciar progresso</button>
+    </div>
+  </div>
+
+  <script>
+    const LEVELS = [
+      {nums:[6,9,12], diff:"🟢 Iniciante", phase:"Descoberta visual", answer:3},
+      {nums:[8,12,20], diff:"🟢 Iniciante", phase:"Descoberta visual", answer:4},
+      {nums:[15,20,35], diff:"🟢 Iniciante", phase:"Descoberta visual", answer:5},
+      {nums:[12,18,30], diff:"🟡 Explorador", phase:"Descobrindo padrões", answer:6},
+      {nums:[21,28,35], diff:"🟡 Explorador", phase:"Descobrindo padrões", answer:7},
+      {nums:[24,32,40], diff:"🟡 Explorador", phase:"Conhecendo o MDC", answer:8},
+      {nums:[27,36,45], diff:"🟠 Estrategista", phase:"Conhecendo o MDC", answer:9},
+      {nums:[30,40,70], diff:"🟠 Estrategista", phase:"Pensando sem os blocos", answer:10},
+      {nums:[36,60,84], diff:"🔴 Mestre", phase:"Pensando sem os blocos", answer:12},
+      {nums:[42,70,98], diff:"🔴 Mestre", phase:"Pensando sem os blocos", answer:14}
+    ];
+
+    const MAX_LAB_VALUE = 1000;
+    const UNIT_DETAIL_LIMIT = 100;
+    const MAX_SCALE_MARKS = 100;
+    const MAX_CUT_PIECES = 16;
+    const RIBBON_COLORS = ["#6f927f", "#c79a64", "#8c82aa"];
+    const RANDOM_MULTIPLIER_SETS = [
+      [2,3,5], [2,3,7], [2,5,7], [3,4,5], [3,4,7], [3,5,8],
+      [4,5,6], [4,5,7], [4,6,9], [4,7,11], [5,6,7], [5,7,9],
+      [5,8,9], [6,7,8], [6,7,10], [6,11,13], [7,8,9], [7,9,10]
+    ];
+
+    const defaultState = {
+      currentLevel:0,
+      completed:{},
+      bestStars:{},
+      totalPoints:0,
+      settings:{hints:true, score:true, formal:true}
+    };
+
+    let state = loadState();
+    let session = freshSession();
+    let mode = "levels";
+    let customNums = null;
+    let customKind = "manual";
+    let customMeta = {};
+
+    function freshSession(){
+      return {choice:2, attempts:0, points:0, history:[], hintStep:0, solved:false, stars:0, lastTested:null};
+    }
+
+    function gcd2(a,b){
+      a=Math.abs(a); b=Math.abs(b);
+      while(b){ [a,b]=[b,a%b]; }
+      return a;
+    }
+    function gcd3(a,b,c){ return gcd2(gcd2(a,b),c); }
+    function divisors(n){
+      const out=[];
+      for(let i=1;i<=n;i++) if(n%i===0) out.push(i);
+      return out;
+    }
+    function clamp(value,min,max){ return Math.max(min,Math.min(max,value)); }
+    function labNumber(value){
+      const parsed=Number.parseInt(value,10);
+      return Number.isFinite(parsed) ? clamp(parsed,2,MAX_LAB_VALUE) : 2;
+    }
+    function loadState(){
+      try{
+        const raw=localStorage.getItem("oficinaFitasState");
+        if(!raw) return structuredClone(defaultState);
+        const parsed=JSON.parse(raw);
+        return {...structuredClone(defaultState), ...parsed, settings:{...defaultState.settings,...parsed.settings}};
+      }catch(e){ return structuredClone(defaultState); }
+    }
+    function saveState(){ localStorage.setItem("oficinaFitasState", JSON.stringify(state)); }
+
+    function showScreen(id){
+      document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+    function openModal(id){ document.getElementById(id).classList.add("show"); }
+    function closeModal(id){ document.getElementById(id).classList.remove("show"); }
+
+    function renderHero(){
+      [[1,12],[2,18],[3,30]].forEach(([idx,n])=>{
+        const el=document.getElementById("heroRibbon"+idx);
+        el.innerHTML="";
+        for(let i=0;i<n;i++) el.appendChild(document.createElement("span"));
+      });
+    }
+
+    function currentNums(){
+      return mode==="free" ? customNums : LEVELS[state.currentLevel].nums;
+    }
+    function currentAnswer(){
+      const [a,b,c]=currentNums();
+      return gcd3(a,b,c);
+    }
+
+    function startLevel(index){
+      mode="levels";
+      state.currentLevel=Math.max(0,Math.min(index,LEVELS.length-1));
+      saveState();
+      session=freshSession();
+      session.choice=Math.min(2,Math.min(...currentNums()));
+      showScreen("gameScreen");
+      renderGame();
+    }
+
+    function startFree(nums, kind="manual", meta={}){
+      mode="free";
+      customNums=nums.map(labNumber);
+      customKind=kind;
+      customMeta=meta;
+      session=freshSession();
+      session.choice=2;
+      closeModal("freeModal");
+      showScreen("gameScreen");
+      renderGame();
+    }
+
+    function renderLevels(){
+      const wrap=document.getElementById("phaseList");
+      wrap.innerHTML="";
+      LEVELS.forEach((l,i)=>{
+        const done=!!state.completed[i];
+        const stars=state.bestStars[i]||0;
+        const card=document.createElement("button");
+        card.className="phase-card btn " + (done?"done":"");
+        card.innerHTML=`
+          <div class="eyebrow">Carta ${i+1}</div>
+          <h3>${l.phase}</h3>
+          <div class="numbers">${l.nums.join(" • ")}</div>
+          <p>${l.diff}</p>
+          <div class="stars">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+        `;
+        card.addEventListener("click",()=>startLevel(i));
+        wrap.appendChild(card);
+      });
+    }
+
+    function renderProgress(){
+      const wrap=document.getElementById("progressWrap");
+      wrap.innerHTML="";
+      if(mode==="free"){
+        const p=document.createElement("div");
+        p.className="pill";
+        p.textContent=customKind==="random" ? "🎲 Desafio aleatório" : "🎲 Laboratório livre";
+        wrap.appendChild(p);
+        return;
+      }
+      LEVELS.forEach((_,i)=>{
+        const b=document.createElement("button");
+        b.className="level-dot";
+        if(state.completed[i]) b.classList.add("done");
+        if(i===state.currentLevel) b.classList.add("current");
+        b.textContent=state.completed[i] ? "✓" : (i+1);
+        b.title=`Fase ${i+1}`;
+        b.addEventListener("click",()=>startLevel(i));
+        wrap.appendChild(b);
+      });
+    }
+
+    function renderGame(){
+      const nums=currentNums();
+      const level=mode==="levels" ? LEVELS[state.currentLevel] : null;
+      const isRandom = mode==="free" && customKind==="random";
+      document.getElementById("levelEyebrow").textContent = mode==="free" ? (isRandom ? "Aleatório" : "Laboratório") : `Fase ${state.currentLevel+1}`;
+      document.getElementById("challengeTitle").textContent = mode==="free" ? (isRandom ? "Desafio sorteado" : "Seu desafio personalizado") : level.phase;
+      document.getElementById("difficultyPill").textContent = mode==="free" ? (isRandom ? `🎲 Até ${customMeta.limit || MAX_LAB_VALUE}` : "🧪 Modo livre") : level.diff;
+      document.getElementById("missionText").textContent =
+        " escolha um tamanho de pedaço que divida as três fitas sem deixar sobra. Depois descubra o maior.";
+      const sizeInput=document.getElementById("sizeInput");
+      sizeInput.max=Math.min(...nums);
+      sizeInput.value=session.choice;
+      document.getElementById("attemptsStat").textContent=session.attempts;
+      document.getElementById("pointsStat").textContent=state.settings.score ? session.points : "—";
+      document.getElementById("starsStat").textContent=session.solved ? ("⭐".repeat(session.stars)+"☆".repeat(3-session.stars)) : "☆ ☆ ☆";
+      document.getElementById("hintBtn").classList.toggle("hidden",!state.settings.hints);
+      renderProgress();
+      renderRibbons();
+      renderHistory();
+      renderFeedback();
+      renderLesson();
+    }
+
+    function getDisplayScale(nums){
+      const largest=Math.max(...nums);
+      return largest<=UNIT_DETAIL_LIMIT ? 1 : Math.ceil(largest/MAX_SCALE_MARKS);
+    }
+
+    function appendDetailedUnits(track,n,tested,remainder){
+      for(let i=1;i<=n;i++){
+        const unit=document.createElement("span");
+        unit.className="unit";
+        if(i%session.choice===0 && i<n) unit.classList.add("group-end");
+        const remainderStart=n-remainder+1;
+        if(tested && remainder>0 && i>=remainderStart) unit.classList.add("remainder");
+        track.appendChild(unit);
+      }
+    }
+
+    function appendScaledMarks(track,n,scale){
+      const marks=Math.ceil(n/scale);
+      for(let i=0;i<marks;i++){
+        const amount=Math.min(scale,n-(i*scale));
+        const mark=document.createElement("span");
+        mark.className="scale-unit"+(amount<scale?" partial":"");
+        mark.title=`Representa ${amount} unidade${amount===1?"":"s"}`;
+        mark.setAttribute("aria-label",mark.title);
+        track.appendChild(mark);
+      }
+    }
+
+    function createCutOverview(n,choice,remainder,color){
+      const completeGroups=Math.floor(n/choice);
+      const overview=document.createElement("div");
+      overview.className="cut-overview";
+      overview.style.setProperty("--ribbon-color",color);
+      overview.setAttribute("aria-label",`${completeGroups} grupos completos de ${choice} e sobra de ${remainder}`);
+
+      const appendPiece=(text,className="cut-piece")=>{
+        const piece=document.createElement("span");
+        piece.className=className;
+        piece.textContent=text;
+        overview.appendChild(piece);
+      };
+      if(completeGroups===0){
+        const noGroup=document.createElement("span");
+        noGroup.className="tiny";
+        noGroup.textContent="Nenhum grupo completo";
+        overview.appendChild(noGroup);
+      }else if(completeGroups<=MAX_CUT_PIECES){
+        for(let i=0;i<completeGroups;i++) appendPiece(choice);
+      }else{
+        const visibleOnEachSide=Math.floor(MAX_CUT_PIECES/2);
+        for(let i=0;i<visibleOnEachSide;i++) appendPiece(choice);
+        const ellipsis=document.createElement("span");
+        ellipsis.className="cut-ellipsis";
+        ellipsis.textContent="…";
+        overview.appendChild(ellipsis);
+        for(let i=0;i<visibleOnEachSide;i++) appendPiece(choice);
+      }
+      if(remainder>0) appendPiece(`sobra ${remainder}`,"cut-piece remainder");
+
+      const summary=document.createElement("div");
+      summary.className="cut-summary";
+      summary.textContent=remainder===0
+        ? `${completeGroups} grupo${completeGroups===1?"":"s"} completo${completeGroups===1?"":"s"} de ${choice}; nenhuma sobra.`
+        : `${completeGroups} grupo${completeGroups===1?"":"s"} completo${completeGroups===1?"":"s"} de ${choice} e sobra de ${remainder}.`;
+      overview.appendChild(summary);
+      return overview;
+    }
+
+    function renderRibbons(){
+      const nums=currentNums();
+      const wrap=document.getElementById("ribbons");
+      const scale=getDisplayScale(nums);
+      const isScaled=scale>1;
+      const tested=session.lastTested===session.choice;
+      wrap.innerHTML="";
+
+      nums.forEach((n,idx)=>{
+        const color=RIBBON_COLORS[idx];
+        const row=document.createElement("div");
+        row.className="ribbon-row";
+        const label=document.createElement("div");
+        label.className="ribbon-label";
+        label.textContent=`Fita ${String.fromCharCode(65+idx)} · ${n}`;
+        const track=document.createElement("div");
+        track.className="ribbon-track";
+        track.style.setProperty("--ribbon-color",color);
+        const remainder=n%session.choice;
+        if(isScaled) appendScaledMarks(track,n,scale);
+        else appendDetailedUnits(track,n,tested,remainder);
+        row.append(label,track);
+        wrap.appendChild(row);
+
+        const holder=document.createElement("div");
+        holder.className="ribbon-result";
+        if(tested){
+          const result=document.createElement("div");
+          result.className="result-strip show "+(remainder===0?"good":"bad");
+          result.textContent=remainder===0
+            ? `✓ ${n} forma ${n/session.choice} grupo(s) completo(s) de ${session.choice}.`
+            : `✗ ${n} deixa sobra de ${remainder}.`;
+          holder.appendChild(result);
+          if(isScaled) holder.appendChild(createCutOverview(n,session.choice,remainder,color));
+        }
+        wrap.appendChild(holder);
+      });
+
+      if(isScaled){
+        const note=document.createElement("p");
+        note.className="scale-note";
+        note.innerHTML=`<strong>Modo em escala:</strong> cada marca completa representa ${scale} unidades. O resumo logo abaixo de cada fita mostra os grupos e a sobra exatos.`;
+        wrap.appendChild(note);
+      }
+    }
+
+    function renderHistory(){
+      const wrap=document.getElementById("history");
+      wrap.innerHTML="";
+      session.history.forEach(h=>{
+        const chip=document.createElement("span");
+        chip.className="history-chip "+(h.ok?"ok":"no");
+        chip.textContent=`${h.value} ${h.ok?"✓":"✗"}`;
+        wrap.appendChild(chip);
+      });
+    }
+
+    function renderFeedback(){
+      const f=document.getElementById("feedback");
+      const claim=document.getElementById("claimBtn");
+      claim.classList.add("hidden");
+      if(session.solved){
+        f.innerHTML=`<strong>🏆 Você encontrou o maior!</strong> ${session.choice} é o maior tamanho que divide as três fitas sem deixar sobra.`;
+        return;
+      }
+      if(session.attempts===0){
+        f.innerHTML="<strong>Observe as fitas.</strong> Escolha um tamanho e faça seu primeiro teste.";
+        return;
+      }
+      if(session.lastTested!==session.choice){
+        f.innerHTML="<strong>Novo tamanho selecionado.</strong> Clique em TESTAR CORTE para ver se ele funciona nas três fitas.";
+        return;
+      }
+      const nums=currentNums();
+      const works=nums.every(n=>n%session.choice===0);
+      if(!works){
+        f.innerHTML="<strong>Esse tamanho deixou sobra.</strong> Observe os pedaços destacados e tente outro tamanho.";
+      }else{
+        f.innerHTML="<strong>Funcionou nas três!</strong> Muito bem. Agora investigue: será que existe um pedaço maior que também funciona?";
+        claim.classList.remove("hidden");
+      }
+    }
+
+    function renderLesson(){
+      const p=document.getElementById("lessonPanel");
+      if(!session.solved){
+        p.classList.remove("show");
+        p.innerHTML="";
+        return;
+      }
+      const nums=currentNums();
+      const g=currentAnswer();
+      const common=divisors(Math.min(...nums)).filter(d=>nums.every(n=>n%d===0));
+      p.classList.add("show");
+      const formalBlock = state.settings.formal ? `
+        <div class="eyebrow">O que descobrimos?</div>
+        <h3 style="font-size:1.6rem;margin-bottom:8px">Isso tem um nome na matemática: Máximo Divisor Comum</h3>
+        <p><strong>MDC(${nums.join(", ")}) = ${g}</strong></p>
+        <div class="equations">
+          ${nums.map(n=>`<div class="equation">${n} ÷ ${g} = ${n/g}</div>`).join("")}
+        </div>
+        <div class="divisor-grid">
+          ${nums.map(n=>`<div class="divisor-line"><strong>Divisores de ${n}:</strong> ${divisors(n).map(d=>common.includes(d)?`<span class="common">${d}</span>`:d).join(", ")}</div>`).join("")}
+        </div>
+        <p style="margin-top:14px">Divisores comuns: <strong>${common.join(", ")}</strong>. O maior deles é <strong>${g}</strong>.</p>
+        <div class="mission">
+          <strong>Eficiência:</strong> com pedaços de ${g}, serão produzidos ${nums.reduce((s,n)=>s+n/g,0)} pedaços e serão necessários ${nums.reduce((s,n)=>s+(n/g-1),0)} cortes no total.
+        </div>` : `
+        <div class="eyebrow">Desafio concluído</div>
+        <h3 style="font-size:1.5rem">Você encontrou o maior pedaço que funciona nas três fitas.</h3>
+        <p class="tiny">A explicação matemática formal está ocultada nas configurações do professor.</p>`;
+      p.innerHTML=formalBlock + `
+        ${mode==="levels" ? `<button class="btn primary" id="nextLevelBtn">${state.currentLevel===LEVELS.length-1?"Concluir trilha":"Próxima fase →"}</button>` : `<button class="btn secondary" id="newFreeBtn">${customKind==="random"?"🎲 Novo aleatório":"🎲 Novo desafio"}</button>`}
+      `;
+      if(mode==="levels"){
+        document.getElementById("nextLevelBtn").addEventListener("click",()=>{
+          if(state.currentLevel===LEVELS.length-1){
+            renderFinal();
+            showScreen("finalScreen");
+          }else startLevel(state.currentLevel+1);
+        });
+      }else{
+        document.getElementById("newFreeBtn").addEventListener("click",()=>{
+          if(customKind==="random"){
+            startFree(randomChallenge(customMeta.limit,customMeta.allowOne),"random",customMeta);
+          }else openModal("freeModal");
+        });
+      }
+    }
+
+    function testChoice(){
+      if(session.solved) return;
+      const nums=currentNums();
+      session.attempts++;
+      session.lastTested=session.choice;
+      const works=nums.every(n=>n%session.choice===0);
+      if(!session.history.some(h=>h.value===session.choice)){
+        session.history.push({value:session.choice,ok:works});
+      }
+      if(state.settings.score){
+        if(works) session.points+=10;
+        else session.points=Math.max(0,session.points-1);
+      }
+      renderGame();
+    }
+
+    function claimAnswer(){
+      const nums=currentNums();
+      if(session.lastTested!==session.choice){
+        document.getElementById("feedback").innerHTML="<strong>Teste primeiro.</strong> Clique em TESTAR CORTE antes de confirmar sua resposta.";
+        return;
+      }
+      const works=nums.every(n=>n%session.choice===0);
+      if(!works){
+        document.getElementById("feedback").innerHTML="<strong>Ainda não.</strong> Esse tamanho deixa sobra em pelo menos uma das fitas.";
+        return;
+      }
+      const answer=currentAnswer();
+      if(session.choice!==answer){
+        document.getElementById("feedback").innerHTML="<strong>Esse tamanho funciona, mas existe um maior.</strong> Continue investigando — não vou revelar qual é.";
+        if(state.settings.score) session.points=Math.max(0,session.points-2);
+        return;
+      }
+      session.solved=true;
+      if(state.settings.score) session.points+=30;
+      session.stars = session.hintStep===0 && session.attempts<=3 ? 3 : (session.hintStep<=1 && session.attempts<=5 ? 2 : 1);
+      if(mode==="levels"){
+        const i=state.currentLevel;
+        state.completed[i]=true;
+        state.bestStars[i]=Math.max(state.bestStars[i]||0,session.stars);
+        state.totalPoints+=session.points;
+        saveState();
+      }
+      renderGame();
+    }
+
+    function hint(){
+      if(!state.settings.hints || session.solved) return;
+      session.hintStep++;
+      const answer=currentAnswer();
+      const hints=[
+        "Procure um tamanho que forme grupos completos nas três fitas.",
+        "Os tamanhos que funcionam são divisores dos três números. Observe suas tentativas que não deixaram sobra.",
+        `Você já sabe que o maior tamanho não pode ser maior que ${Math.min(...currentNums())}. Tente testar divisores desse número, começando pelos maiores.`
+      ];
+      const text=hints[Math.min(session.hintStep-1,hints.length-1)];
+      document.getElementById("feedback").innerHTML=`<strong>💡 Dica ${session.hintStep}</strong> ${text}`;
+      if(state.settings.score) session.points=Math.max(0,session.points-2);
+      document.getElementById("pointsStat").textContent=state.settings.score?session.points:"—";
+    }
+
+    function setChoice(value){
+      if(session.solved) return;
+      const parsed=Number.parseInt(value,10);
+      if(!Number.isFinite(parsed)){
+        document.getElementById("sizeInput").value=session.choice;
+        return;
+      }
+      const max=Math.min(...currentNums());
+      session.choice=clamp(parsed,1,max);
+      document.getElementById("sizeInput").value=session.choice;
+      if(session.attempts>0){
+        renderRibbons();
+        renderFeedback();
+      }
+    }
+
+    function adjustChoice(delta){ setChoice(session.choice+delta); }
+
+    function randomInt(min,max){
+      return Math.floor(Math.random()*(max-min+1))+min;
+    }
+
+    function shuffle(values){
+      const copy=[...values];
+      for(let i=copy.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [copy[i],copy[j]]=[copy[j],copy[i]];
+      }
+      return copy;
+    }
+
+    function randomChallenge(limit=100,allowOne=false){
+      const ceiling=clamp(Number.parseInt(limit,10)||100,6,MAX_LAB_VALUE);
+      const possibleSets=RANDOM_MULTIPLIER_SETS.filter(set=>{
+        const maxMultiplier=Math.max(...set);
+        return Math.floor(ceiling/maxMultiplier)>=2;
+      });
+      const multipliers=possibleSets[Math.floor(Math.random()*possibleSets.length)] || [2,3,5];
+      const maxMultiplier=Math.max(...multipliers);
+      const maxGcd=Math.floor(ceiling/maxMultiplier);
+      const targetGcd=maxGcd<2 || (allowOne && Math.random()<0.25) ? 1 : randomInt(2,maxGcd);
+      // Como MDC(multiplicadores) = 1, o MDC final é exatamente targetGcd.
+      return shuffle(multipliers.map(multiplier=>multiplier*targetGcd));
+    }
+
+    function renderFinal(){
+      const completed=Object.keys(state.completed).length;
+      const stars=Object.values(state.bestStars).reduce((a,b)=>a+b,0);
+      document.getElementById("finalCompleted").textContent=completed;
+      document.getElementById("finalStars").textContent=stars;
+      document.getElementById("finalPoints").textContent=state.totalPoints;
+    }
+
+    function syncSettingsUI(){
+      [["toggleHints","hints"],["toggleScore","score"],["toggleFormal","formal"]].forEach(([id,key])=>{
+        document.getElementById(id).classList.toggle("on",!!state.settings[key]);
+      });
+    }
+
+    // Eventos principais
+    document.getElementById("startBtn").addEventListener("click",()=>{
+      openModal("tutorialModal");
+    });
+    document.getElementById("tutorialStartBtn").addEventListener("click",()=>{
+      closeModal("tutorialModal"); startLevel(state.currentLevel||0);
+    });
+    document.getElementById("howBtn").addEventListener("click",()=>openModal("tutorialModal"));
+    document.getElementById("levelsBtn").addEventListener("click",()=>{renderLevels();showScreen("levelsScreen")});
+    document.getElementById("backHomeFromLevels").addEventListener("click",()=>showScreen("homeScreen"));
+    document.getElementById("backLevelsBtn").addEventListener("click",()=>{
+      if(mode==="free") showScreen("homeScreen");
+      else {renderLevels();showScreen("levelsScreen")}
+    });
+    document.getElementById("freeBtn").addEventListener("click",()=>openModal("freeModal"));
+    document.getElementById("randomBtn").addEventListener("click",()=>{
+      startFree(randomChallenge(100,false),"random",{limit:100,allowOne:false});
+    });
+    document.getElementById("finalFreeBtn").addEventListener("click",()=>openModal("freeModal"));
+    document.getElementById("replayBtn").addEventListener("click",()=>startLevel(0));
+    document.getElementById("teacherBtn").addEventListener("click",()=>{syncSettingsUI();openModal("teacherModal")});
+    document.getElementById("minusBtn").addEventListener("click",()=>adjustChoice(-1));
+    document.getElementById("plusBtn").addEventListener("click",()=>adjustChoice(1));
+    document.getElementById("minusTenBtn").addEventListener("click",()=>adjustChoice(-10));
+    document.getElementById("plusTenBtn").addEventListener("click",()=>adjustChoice(10));
+    document.getElementById("sizeInput").addEventListener("change",event=>setChoice(event.target.value));
+    document.querySelectorAll("[data-choice]").forEach(button=>{
+      button.addEventListener("click",()=>setChoice(button.dataset.choice));
+    });
+    document.getElementById("testBtn").addEventListener("click",testChoice);
+    document.getElementById("claimBtn").addEventListener("click",claimAnswer);
+    document.getElementById("hintBtn").addEventListener("click",hint);
+    document.getElementById("createFreeBtn").addEventListener("click",()=>{
+      const vals=["freeA","freeB","freeC"].map(id=>labNumber(document.getElementById(id).value));
+      startFree(vals,"manual");
+    });
+    document.getElementById("randomFreeBtn").addEventListener("click",()=>{
+      const limit=Number.parseInt(document.getElementById("randomLimit").value,10);
+      const allowOne=document.getElementById("randomAllowOne").checked;
+      startFree(randomChallenge(limit,allowOne),"random",{limit,allowOne});
+    });
+    document.getElementById("resetProgressBtn").addEventListener("click",()=>{
+      if(confirm("Deseja realmente apagar todas as fases, estrelas e pontuações salvas?")){
+        state=structuredClone(defaultState); saveState(); syncSettingsUI(); renderLevels(); closeModal("teacherModal");
+      }
+    });
+
+    [["toggleHints","hints"],["toggleScore","score"],["toggleFormal","formal"]].forEach(([id,key])=>{
+      document.getElementById(id).addEventListener("click",()=>{
+        state.settings[key]=!state.settings[key]; saveState(); syncSettingsUI(); renderGame();
+      });
+    });
+
+    document.querySelectorAll("[data-close]").forEach(btn=>{
+      btn.addEventListener("click",()=>closeModal(btn.dataset.close));
+    });
+    document.querySelectorAll(".modal-backdrop").forEach(back=>{
+      back.addEventListener("click",e=>{ if(e.target===back) back.classList.remove("show"); });
+    });
+
+    document.addEventListener("keydown",e=>{
+      if(!document.getElementById("gameScreen").classList.contains("active")) return;
+      if(["INPUT","SELECT","TEXTAREA"].includes(document.activeElement.tagName)) return;
+      if(e.key==="ArrowLeft") adjustChoice(-1);
+      if(e.key==="ArrowRight") adjustChoice(1);
+      if(e.key==="Enter") testChoice();
+    });
+
+    renderHero();
+    renderLevels();
+    syncSettingsUI();
+  </script>
+</body>
+</html>
