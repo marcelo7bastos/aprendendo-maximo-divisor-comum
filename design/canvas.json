@@ -1,0 +1,30 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Tela final" },
+    { "id": "page-2", "name": "Direções exploradas" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1120, "h": 980, "title": "Fase 4 · tela de jogo", "page": "page-1" },
+    { "file": "MesaDaFesta.dc.html", "x": 0, "y": 0, "w": 1120, "h": 900, "title": "A · Mesa da festa (descartada)", "page": "page-2" },
+    { "file": "ArcadeFesta.dc.html", "x": 1240, "y": 0, "w": 1120, "h": 900, "title": "B · Arcade da festa (descartada)", "page": "page-2" }
+  ],
+  "annotations": [
+    {
+      "id": "final",
+      "x": -640,
+      "y": 0,
+      "w": 540,
+      "page": "page-1",
+      "text": "TELA DE JOGO — CADERNO DE MATEMÁTICA\n\nA ideia central: cada linha é um kit. A divisão vira retângulo e a sobra vira linha incompleta. É a estrutura real da divisão, não uma ilustração dela.\n\nO QUE FOI DESENVOLVIDO ALÉM DO ESBOÇO\n\n1. Trilha das fases no topo (1 a 10), no lugar dos .level-dot atuais.\n\n2. Estoque com marca colorida em vez do texto solto que estava no esboço.\n\n3. Dica em três degraus, que orienta sem entregar o número:\n   · se sobrar em um item só, já não serve\n   · o número de kits não passa do menor estoque\n   · teste os divisores do menor estoque\n\n4. Botão \"É o maior de todos\" — a criança precisa se comprometer. Acertando, o painel abre a descoberta: 12 = 6 x 2, 18 = 6 x 3, 30 = 6 x 5, e a frase que dá nome ao que ela achou. Se ela reivindica um número que funciona mas não é o máximo, o painel diz \"quase\" e manda continuar subindo.\n\n5. Os números testados ficam marcados no rodapé: verde funcionou, riscado não. A criança monta sozinha a lista dos divisores comuns, e o MDC é o maior círculo verde.\n\nPARA TESTAR: troque o \"Desafio\" no topo do artboard. Em 42 · 70 · 98 as linhas passam de 11 marcas e viram \"… 21 no total\" — resposta de desenho para o estoque grande, no lugar da escala do jogo atual."
+    },
+    {
+      "id": "arquivo",
+      "x": -640,
+      "y": 0,
+      "w": 460,
+      "page": "page-2",
+      "text": "DIREÇÕES NÃO ESCOLHIDAS\n\nGuardadas como estavam, para consulta.\n\nA · Mesa da festa — papel recortado, kits como caixas de kraft, feedback imediato a cada toque.\n\nB · Arcade da festa — neon, tentativas e recorde, revelação depois do botão MONTAR.\n\nSe algum dia quiser a energia da B dentro da C, o caminho mais barato é levar só o contador de tentativas e o momento de revelação, sem o fundo escuro."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

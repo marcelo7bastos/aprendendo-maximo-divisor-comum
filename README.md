@@ -32,11 +32,13 @@ A expressão `MDC(a, b, c)` aparece somente depois que a criança encontra o mai
 
 No modo aleatório, é possível escolher limites de 60, 100, 300 ou 1.000 itens.
 
-## Visualização adaptativa
+## Como o estoque aparece na tela
 
-Até 100, cada item é representado no estoque. Entre 101 e 1.000, o painel usa uma escala comum com no máximo 100 marcas por tipo de item.
+O tabuleiro é um caderno quadriculado: **cada linha é um kit**. A divisão vira um retângulo de marcas e a sobra vira a linha que não fechou, destacada em vermelho tracejado logo abaixo, com a conta escrita à mão (`12 ÷ 4 = 3, sobra 0`).
 
-Depois de cada tentativa, cartões de kits mostram exatamente quanto cada criança receberia. Se houver resto, os itens que permanecem no estoque aparecem separados e identificados por texto e cor.
+Números grandes têm resposta de desenho, não de escala: quando um kit passa de 11 itens, a linha mostra três marcas e o resumo `… 21 no total`; acima de 12 kits, as linhas seguintes viram `+ N kits iguais a esses`. A conta exibida continua sendo a real.
+
+A escolha do número de kits é uma trilha de 1 a 20, com alvos de toque de 48px. O que funcionou fica verde, o que não funcionou fica riscado — a criança monta sozinha a lista dos divisores comuns, e o MDC é o maior círculo verde. Para estoques do laboratório acima de 20 itens, aparece um campo para digitar qualquer número.
 
 ## Recursos
 

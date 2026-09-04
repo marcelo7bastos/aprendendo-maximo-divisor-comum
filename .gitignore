@@ -22,3 +22,6 @@ dist/
 # Configurações locais que não devem ser publicadas
 .env
 .env.*
+
+# Canvas de design gerado (2 MB, publicado como Artifact; as fontes ficam em design/)
+arte-da-missao-kits.html

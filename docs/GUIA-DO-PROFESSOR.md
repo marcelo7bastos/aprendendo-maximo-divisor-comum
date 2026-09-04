@@ -57,7 +57,7 @@ MDC(12, 18, 30) = 6
 
 No laboratório, escolha estoques de 2 a 1.000 itens. Para valores altos, incentive a entrada direta do número de kits e a verificação por divisão.
 
-A escala visual muda automaticamente acima de 100, mas a resposta abaixo de cada item sempre informa:
+Acima de 20 itens no menor estoque, aparece um campo para digitar qualquer número de kits, além da trilha de 1 a 20. Quando um kit passa de 11 itens, a linha resume a quantidade por escrito em vez de enfileirar marcas — mas a conta abaixo de cada item continua informando:
 
 - quantos kits foram montados;
 - quanto cada kit recebe;

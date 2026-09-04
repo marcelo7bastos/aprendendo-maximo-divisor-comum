@@ -46,12 +46,13 @@ Exemplo: com 12 maçãs, 18 biscoitos e 30 adesivos, quatro kits deixam dois bis
 
 ## Estoques de até 1.000 itens
 
-O laboratório aceita três números inteiros de 2 a 1.000. A criança pode digitar diretamente o número de kits ou usar controles de `−1`, `+1`, `−10` e `+10`.
+O laboratório aceita três números inteiros de 2 a 1.000. A criança escolhe o número de kits na trilha de 1 a 20, pelas setas `←` e `→` do teclado, ou digitando no campo que aparece quando o menor estoque passa de 20 itens.
 
-- **Até 100 itens:** cada unidade aparece como uma marca no estoque.
-- **De 101 a 1.000:** os três estoques usam uma escala comum com no máximo 100 marcas por item.
+- **Até 11 itens por kit:** cada unidade aparece como uma marca na linha do kit.
+- **Acima de 11 itens por kit:** a linha mostra três marcas e resume o restante por escrito (`… 21 no total`).
+- **Acima de 12 kits:** as linhas seguintes são resumidas em `+ N kits iguais a esses`.
 
-Em qualquer escala, os cartões informam a distribuição exata: quantidade de kits, itens por kit e sobra. A compactação visual não altera nem esconde o resultado matemático.
+Em qualquer caso, a conta abaixo de cada item informa a distribuição exata: quantidade de kits, itens por kit e sobra. A compactação visual não altera nem esconde o resultado matemático.
 
 ## Modo surpresa
 

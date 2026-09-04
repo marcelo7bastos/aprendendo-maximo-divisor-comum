@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Lexend:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin:0; background:#FCFAF2; font-family: Lexend, "Segoe UI", system-ui, sans-serif; }
+    a { color:#3A6BA5; } a:hover { color:#28507F; }
+    .marca{ width:16px; height:16px; border-radius:5px; border:2px solid #23324D; display:block; }
+    .marca.sobra{ border-style:dashed; }
+    .num{ min-width:48px; height:48px; border-radius:50%; border:2px solid #C3CEDD; background:#FFFFFF;
+      font-family:Lexend, sans-serif; font-size:17px; font-weight:600; color:#4A5A75; cursor:pointer;
+      position:relative; transition:transform .12s ease; }
+    .num:hover{ transform:translateY(-2px); border-color:#8FA3BE; }
+    .num.sel{ background:#23324D; border-color:#23324D; color:#FCFAF2; }
+    .num.ok{ border-color:#3E8E5A; color:#2E6B41; box-shadow:0 0 0 3px rgba(62,142,90,.16); }
+    .num.ok.sel{ background:#3E8E5A; border-color:#3E8E5A; color:#FFFFFF; }
+    .num.no{ color:#B9C3D2; border-color:#DCE3EC; }
+    .num.no:after{ content:""; position:absolute; left:10px; right:10px; top:22px; height:2px; background:#DCE3EC; }
+    .acao{ height:48px; padding:0 20px; border-radius:14px; border:2px solid #C3CEDD; background:#FFFFFF;
+      font-family:Lexend, sans-serif; font-size:15px; font-weight:600; color:#3D4C66; cursor:pointer;
+      display:inline-flex; align-items:center; gap:9px; transition:transform .12s ease; }
+    .acao:hover{ transform:translateY(-2px); border-color:#8FA3BE; }
+    .acao.forte{ background:#23324D; border-color:#23324D; color:#FCFAF2; }
+    .fase{ width:26px; height:26px; border-radius:50%; border:2px solid #DCE3EC; background:#FFFFFF;
+      font-size:11px; font-weight:600; color:#A3B1C6; display:grid; place-items:center; }
+    .fase.feita{ border-color:#3E8E5A; background:rgba(62,142,90,.12); color:#2E6B41; }
+    .fase.agora{ border-color:#23324D; background:#23324D; color:#FCFAF2; }
+  </style>
+</helmet>
+
+<div style="width:1120px;height:980px;background-color:#FCFAF2;background-image:linear-gradient(#E4EBF3 1px, transparent 1px), linear-gradient(90deg, #E9EFF5 1px, transparent 1px);background-size:100% 24px, 24px 100%;padding:26px 30px 26px 62px;position:relative;display:flex;flex-direction:column;gap:14px;color:#23324D;font-family:Lexend, 'Segoe UI', system-ui, sans-serif;">
+
+  <div style="position:absolute;left:44px;top:0;bottom:0;width:2px;background:#EFA9A2;"></div>
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;">
+    <div>
+      <div style="font-family:Caveat, cursive;font-size:40px;font-weight:700;line-height:1;">Missão Kits da Festa</div>
+      <div style="font-size:12px;font-weight:600;color:#8195B0;letter-spacing:.1em;text-transform:uppercase;margin-top:5px;">Fase 4 · Mais crianças na festa</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:7px;">
+      <span class="fase feita">1</span>
+      <span class="fase feita">2</span>
+      <span class="fase feita">3</span>
+      <span class="fase agora">4</span>
+      <span class="fase">5</span>
+      <span class="fase">6</span>
+      <span class="fase">7</span>
+      <span class="fase">8</span>
+      <span class="fase">9</span>
+      <span class="fase">10</span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:14px;">
+    <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.82);border:2px solid #D8E1EC;border-radius:14px;padding:11px 15px;">
+      <span class="marca" style="width:22px;height:22px;border-color:#C7443E;background:rgba(199,68,62,.16)"></span>
+      <div style="flex-grow:1;">
+        <div style="font-size:12px;font-weight:600;color:#8195B0;">no estoque</div>
+        <div style="font-size:20px;font-weight:700;color:#C7443E;line-height:1.2;">{{estoque.a}} maçãs</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.82);border:2px solid #D8E1EC;border-radius:14px;padding:11px 15px;">
+      <span class="marca" style="width:22px;height:22px;border-color:#A9743A;background:rgba(169,116,58,.16)"></span>
+      <div style="flex-grow:1;">
+        <div style="font-size:12px;font-weight:600;color:#8195B0;">no estoque</div>
+        <div style="font-size:20px;font-weight:700;color:#A9743A;line-height:1.2;">{{estoque.b}} biscoitos</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.82);border:2px solid #D8E1EC;border-radius:14px;padding:11px 15px;">
+      <span class="marca" style="width:22px;height:22px;border-color:#5C4CB0;background:rgba(92,76,176,.16)"></span>
+      <div style="flex-grow:1;">
+        <div style="font-size:12px;font-weight:600;color:#8195B0;">no estoque</div>
+        <div style="font-size:20px;font-weight:700;color:#5C4CB0;line-height:1.2;">{{estoque.c}} adesivos</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:{{painel.fundo}};border:2px solid {{painel.borda}};border-radius:16px;padding:13px 17px;display:flex;flex-direction:column;gap:9px;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <span style="font-family:Caveat, cursive;font-size:29px;color:{{painel.cor}};transform:rotate(-1.5deg);display:block;white-space:nowrap;">{{painel.chamada}}</span>
+      <span style="font-size:14px;font-weight:500;color:#5A6B85;">{{painel.explicacao}}</span>
+    </div>
+    <sc-if value="{{painel.descoberta}}" hint-placeholder-val="{{false}}">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding-top:3px;border-top:2px dashed #B7D6BF;">
+        <sc-for list="{{painel.equacoes}}" as="eq" hint-placeholder-count="3">
+          <span style="font-family:Caveat, cursive;font-size:26px;color:#2E6B41;padding:4px 12px;border-radius:999px;background:rgba(62,142,90,.1);">{{eq.texto}}</span>
+        </sc-for>
+        <span style="font-size:15px;font-weight:700;color:#2E6B41;">{{painel.frase}}</span>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="flex-grow:1;display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:16px;">
+    <sc-for list="{{colunas}}" as="col" hint-placeholder-count="3">
+      <div style="background:rgba(255,255,255,.82);border:2px solid #D8E1EC;border-radius:16px;padding:14px 15px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:9px;">
+          <span class="marca" style="border-color:{{col.cor}};background:{{col.fundo}}"></span>
+          <span style="font-size:14px;font-weight:600;color:{{col.cor}};">{{col.titulo}}</span>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <sc-for list="{{col.linhas}}" as="linha" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:5px;">
+              <span style="width:24px;font-size:10px;font-weight:600;color:#A3B1C6;">{{linha.rotulo}}</span>
+              <sc-for list="{{linha.marcas}}" as="m" hint-placeholder-count="3">
+                <span class="marca" style="border-color:{{col.cor}};background:{{col.fundo}}"></span>
+              </sc-for>
+              <sc-if value="{{linha.compacta}}" hint-placeholder-val="{{false}}">
+                <span style="font-size:12px;font-weight:600;color:{{col.cor}};padding-left:2px;">{{linha.texto}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top:auto;display:flex;flex-direction:column;gap:9px;">
+          <sc-if value="{{col.temSobra}}" hint-placeholder-val="{{true}}">
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 11px;border:2px dashed #E08C7E;border-radius:999px;background:rgba(226,85,61,.06);">
+              <span style="font-family:Caveat, cursive;font-size:21px;color:#C2452F;">sobra</span>
+              <sc-for list="{{col.sobraMarcas}}" as="s" hint-placeholder-count="2">
+                <span class="marca sobra" style="border-color:#C2452F;background:rgba(194,69,47,.12)"></span>
+              </sc-for>
+              <span style="font-size:13px;font-weight:600;color:#C2452F;">{{col.sobraTexto}}</span>
+            </div>
+          </sc-if>
+          <div style="font-family:Caveat, cursive;font-size:28px;line-height:1.1;color:#23324D;">{{col.equacao}}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="background:rgba(255,255,255,.82);border:2px solid #D8E1EC;border-radius:16px;padding:14px 17px;display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;">
+      <div style="font-size:14px;font-weight:600;">Quantos kits? Vá testando — o que funcionou fica verde.</div>
+      <div style="font-family:Caveat, cursive;font-size:25px;color:#2E6B41;">{{marcador}}</div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px;">
+      <sc-for list="{{opcoes}}" as="op" hint-placeholder-count="12">
+        <button class="num {{op.cls}}" onClick="{{op.pick}}">{{op.n}}</button>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <button class="acao" onClick="{{pedirDica}}">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M9.2 17.4h5.6M10 20.4h4" stroke="#C2952F" stroke-width="2" stroke-linecap="round"></path>
+          <path d="M12 3.4a5.9 5.9 0 0 0-3.4 10.7c.5.4.8 1 .8 1.6h5.2c0-.6.3-1.2.8-1.6A5.9 5.9 0 0 0 12 3.4Z" fill="rgba(240,180,41,.2)" stroke="#C2952F" stroke-width="2" stroke-linejoin="round"></path>
+        </svg>
+        {{rotuloDica}}
+      </button>
+      <button class="acao forte" onClick="{{reivindicar}}">É o maior de todos</button>
+      <span style="font-family:Caveat, cursive;font-size:23px;color:#3A6BA5;">{{textoDica}}</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+
+<script data-dc-script data-props='{"desafio":{"editor":"enum","options":["12 · 18 · 30","8 · 12 · 20","42 · 70 · 98"],"default":"12 · 18 · 30","section":"Desafio"},"$preview":{"width":1120,"height":980}}'>
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { kits: 4, tentados: {}, dica: 0, reivindicado: false };
+  }
+  numeros(){
+    var d = this.props.desafio;
+    if (d === "8 · 12 · 20") return [8, 12, 20];
+    if (d === "42 · 70 · 98") return [42, 70, 98];
+    return [12, 18, 30];
+  }
+  mdc(a, b){ while (b) { var t = a % b; a = b; b = t; } return a; }
+  renderVals(){
+    var self = this;
+    var nums = this.numeros();
+    var itens = [
+      { nome: "maçãs", singular: "maçã", cor: "#C7443E", fundo: "rgba(199,68,62,.16)" },
+      { nome: "biscoitos", singular: "biscoito", cor: "#A9743A", fundo: "rgba(169,116,58,.16)" },
+      { nome: "adesivos", singular: "adesivo", cor: "#5C4CB0", fundo: "rgba(92,76,176,.16)" }
+    ];
+    var menorEstoque = Math.min(nums[0], nums[1], nums[2]);
+    var maxKits = Math.min(14, menorEstoque);
+    var kits = Math.max(1, Math.min(this.state.kits, maxKits));
+    var LIMITE_COLUNAS = 11;
+    var LIMITE_LINHAS = 12;
+
+    var colunas = [];
+    var totalSobra = 0;
+    for (var i = 0; i < 3; i++) {
+      var total = nums[i];
+      var porKit = Math.floor(total / kits);
+      var resto = total % kits;
+      totalSobra += resto;
+
+      var compacta = porKit > LIMITE_COLUNAS;
+      var linhas = [];
+      var linhasVisiveis = Math.min(kits, LIMITE_LINHAS);
+      for (var k = 0; k < linhasVisiveis; k++) {
+        var marcas = [];
+        var quantas = compacta ? 3 : porKit;
+        for (var p = 0; p < quantas; p++) marcas.push({});
+        linhas.push({
+          rotulo: "kit " + (k + 1),
+          marcas: marcas,
+          compacta: compacta,
+          texto: "… " + porKit + " no total"
+        });
+      }
+      if (kits > LIMITE_LINHAS) {
+        linhas.push({ rotulo: "", marcas: [], compacta: true, texto: "+ " + (kits - LIMITE_LINHAS) + " kits iguais a esses" });
+      }
+
+      var sobraMarcas = [];
+      var mostrar = Math.min(resto, 8);
+      for (var q = 0; q < mostrar; q++) sobraMarcas.push({});
+
+      colunas.push({
+        titulo: total + " " + itens[i].nome,
+        cor: itens[i].cor,
+        fundo: itens[i].fundo,
+        linhas: linhas,
+        temSobra: resto > 0,
+        sobraMarcas: sobraMarcas,
+        sobraTexto: resto + " " + (resto === 1 ? itens[i].singular : itens[i].nome),
+        equacao: total + " ÷ " + kits + " = " + porKit + ", sobra " + resto
+      });
+    }
+
+    var ok = totalSobra === 0;
+    var g = this.mdc(this.mdc(nums[0], nums[1]), nums[2]);
+
+    var painel;
+    if (this.state.reivindicado && ok && kits === g) {
+      var equacoes = [];
+      for (var e = 0; e < 3; e++) equacoes.push({ texto: nums[e] + " = " + g + " × " + (nums[e] / g) });
+      painel = {
+        fundo: "rgba(62,142,90,.09)", borda: "#8FBE93", cor: "#2E6B41",
+        chamada: "é ele mesmo!",
+        explicacao: "Não existe número maior de kits que zere os três estoques ao mesmo tempo.",
+        descoberta: true,
+        equacoes: equacoes,
+        frase: g + " é o Máximo Divisor Comum (MDC) de " + nums[0] + ", " + nums[1] + " e " + nums[2] + "."
+      };
+    } else if (this.state.reivindicado && ok) {
+      painel = {
+        fundo: "rgba(240,180,41,.12)", borda: "#E3C275", cor: "#8A6516",
+        chamada: "quase!",
+        explicacao: "Com " + kits + " kits realmente não sobra nada, mas ainda dá para montar mais kits iguais. Continue subindo.",
+        descoberta: false, equacoes: [], frase: ""
+      };
+    } else if (this.state.reivindicado) {
+      painel = {
+        fundo: "rgba(226,85,61,.08)", borda: "#E08C7E", cor: "#C2452F",
+        chamada: "ainda não",
+        explicacao: "Com " + kits + " kits sobram itens na mesa. Um número só pode ser o maior depois de zerar os três estoques.",
+        descoberta: false, equacoes: [], frase: ""
+      };
+    } else if (ok) {
+      painel = {
+        fundo: "rgba(62,142,90,.09)", borda: "#8FBE93", cor: "#2E6B41",
+        chamada: "deu certo com " + kits + "!",
+        explicacao: "Cada linha é um kit e todas ficaram iguais, sem nenhum quadradinho de fora. Será que dá para montar mais kits?",
+        descoberta: false, equacoes: [], frase: ""
+      };
+    } else {
+      painel = {
+        fundo: "rgba(255,255,255,.82)", borda: "#D8E1EC", cor: "#C2452F",
+        chamada: "com " + kits + " ainda sobra",
+        explicacao: "Cada linha é um kit. Os quadradinhos tracejados são o que não coube em kit nenhum.",
+        descoberta: false, equacoes: [], frase: ""
+      };
+    }
+
+    var marcas2 = Object.assign({}, this.state.tentados);
+    marcas2[kits] = ok;
+    var maiorQueFuncionou = 0;
+    var chaves = Object.keys(marcas2);
+    for (var c = 0; c < chaves.length; c++) {
+      var valorChave = parseInt(chaves[c], 10);
+      if (marcas2[chaves[c]] === true && valorChave > maiorQueFuncionou) maiorQueFuncionou = valorChave;
+    }
+
+    var opcoes = [];
+    for (var n = 1; n <= maxKits; n++) {
+      (function(valor){
+        var cls = "";
+        if (marcas2[valor] === true) cls = "ok";
+        else if (marcas2[valor] === false) cls = "no";
+        if (valor === kits) cls = cls ? cls + " sel" : "sel";
+        opcoes.push({
+          n: valor,
+          cls: cls,
+          pick: function(){
+            var novos = Object.assign({}, self.state.tentados);
+            novos[kits] = ok;
+            self.setState({ kits: valor, tentados: novos, reivindicado: false });
+          }
+        });
+      })(n);
+    }
+
+    var dicas = [
+      "",
+      "se sobrar em um item só, o número já não serve — tem que zerar os três",
+      "o número de kits nunca passa do menor estoque, que aqui é " + menorEstoque,
+      "teste os números que dividem " + menorEstoque + " certinho; o maior que servir nos três é a resposta"
+    ];
+    var passo = Math.min(this.state.dica, 3);
+
+    return {
+      estoque: { a: nums[0], b: nums[1], c: nums[2] },
+      colunas: colunas,
+      opcoes: opcoes,
+      painel: painel,
+      marcador: maiorQueFuncionou > 0 ? "maior que funcionou: " + maiorQueFuncionou : "nenhum funcionou ainda",
+      pedirDica: function(){ self.setState({ dica: Math.min(self.state.dica + 1, 3) }); },
+      reivindicar: function(){ self.setState({ reivindicado: true }); },
+      rotuloDica: passo === 0 ? "Dica" : "Outra dica",
+      textoDica: dicas[passo]
+    };
+  }
+}
+</script>
+</body>
+</html>
