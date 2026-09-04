@@ -1,45 +1,60 @@
-# Oficina das Fitas — Jogo do MDC
+# Missão Kits da Festa — Aprendendo MDC
 
-Um jogo educativo, visual e responsivo para explorar o **Máximo Divisor Comum (MDC)** a partir de fitas que precisam ser cortadas em pedaços iguais, sem sobras e no maior tamanho possível.
+Um jogo educativo, visual e responsivo para crianças descobrirem o **Máximo Divisor Comum (MDC)** enquanto organizam kits iguais para uma festa escolar.
 
-Em vez de começar por uma fórmula, o jogo segue a sequência pedagógica:
+Em vez de começar por uma fórmula, o jogo propõe uma pergunta concreta:
+
+> Qual é o maior número de kits iguais que podemos montar sem deixar nenhum item sobrando?
+
+A aprendizagem segue o percurso:
 
 > experimentar → observar → testar → comparar → descobrir → nomear → calcular
 
-O projeto funciona inteiramente no navegador, sem dependências externas, conta ou conexão com a internet.
-
 ## Como jogar
 
-Abra [index.html](index.html) no navegador. Ele encaminha para o arquivo principal, [oficina_das_fitas_mdc.html](oficina_das_fitas_mdc.html), que também pode ser aberto diretamente.
+Abra [index.html](index.html) no navegador ou acesse a versão publicada no [GitHub Pages](https://marcelo7bastos.github.io/aprendendo-maximo-divisor-comum/).
 
-Em cada desafio, escolha um tamanho de pedaço, teste o corte nas três fitas e observe se há sobras. Um tamanho só resolve a missão quando divide todas as fitas exatamente; para concluir, é preciso encontrar o **maior** tamanho que funciona.
+Em cada missão há um estoque de maçãs, biscoitos e adesivos. A criança escolhe quantos kits quer montar. O jogo mostra:
+
+- quantos itens de cada tipo entram em cada kit;
+- quais itens ficam no estoque quando a divisão não é exata;
+- se ainda é possível montar mais kits iguais.
+
+A expressão `MDC(a, b, c)` aparece somente depois que a criança encontra o maior número de kits possível.
 
 ## Modos disponíveis
 
-- **Trilha de desafios:** dez cartas com progressão da descoberta visual à formalização do MDC.
-- **Laboratório:** crie desafios informando três números inteiros de 2 a 1.000.
-- **Desafio aleatório:** gere novos conjuntos para praticar sem repetir a trilha. O gerador constrói números com um MDC conhecido e evita conjuntos triviais ou fora do intervalo.
+- **Trilha de missões:** dez desafios com dificuldade gradual.
+- **Estoque personalizado:** escolha três quantidades entre 2 e 1.000.
+- **Estoque surpresa:** gere conjuntos aleatórios com MDC conhecido.
+- **Desafio MDC = 1:** opção avançada no gerador aleatório.
+- **Área do professor:** controle dicas, pontuação e apresentação da linguagem formal.
 
-No laboratório, o aleatório oferece limites de 60, 100, 300 ou 1.000 e uma opção avançada para incluir o caso `MDC = 1`.
+No modo aleatório, é possível escolher limites de 60, 100, 300 ou 1.000 itens.
 
-Para comprimentos de até 100, a interface usa blocos unitários. De 101 a 1.000, passa a usar uma escala comum com, no máximo, 100 marcas por fita e uma visão compacta de grupos e sobra. Assim, o raciocínio visual permanece fiel sem desenhar até mil elementos na tela.
+## Visualização adaptativa
 
-## Recursos pedagógicos
+Até 100, cada item é representado no estoque. Entre 101 e 1.000, o painel usa uma escala comum com no máximo 100 marcas por tipo de item.
 
-- Feedback que trata a tentativa que deixa resto como investigação, não como punição.
-- Confirmação separada para um divisor comum e para o maior divisor comum.
-- Dicas progressivas e explicação formal opcional após a descoberta.
-- Registro local de fases, estrelas, pontos e configurações no navegador.
-- Controles por teclado e layout adaptado para computador, tablet e celular.
+Depois de cada tentativa, cartões de kits mostram exatamente quanto cada criança receberia. Se houver resto, os itens que permanecem no estoque aparecem separados e identificados por texto e cor.
 
-Leia também a [proposta pedagógica](docs/PROPOSTA-PEDAGOGICA.md) e o [guia do professor](docs/GUIA-DO-PROFESSOR.md).
+## Recursos
 
-## Estrutura do projeto
+- Funciona offline e sem dependências externas.
+- Interface responsiva para computador, tablet e celular.
+- Controles grandes, entrada por teclado e mensagens que não dependem somente de cor.
+- Dicas progressivas e feedback sem punição excessiva.
+- Progresso, estrelas, pontuação e configurações salvos em `localStorage`.
+- Nenhum dado é enviado para servidores.
+
+Consulte também a [proposta pedagógica](docs/PROPOSTA-PEDAGOGICA.md) e o [guia do professor](docs/GUIA-DO-PROFESSOR.md).
+
+## Estrutura
 
 ```text
 .
-├── index.html                    # entrada para GitHub Pages; encaminha ao jogo
-├── oficina_das_fitas_mdc.html    # aplicativo completo (HTML, CSS e JavaScript)
+├── index.html                       # entrada do GitHub Pages
+├── missao_kits_da_festa.html       # jogo completo
 ├── README.md
 ├── .gitignore
 └── docs/
@@ -47,31 +62,22 @@ Leia também a [proposta pedagógica](docs/PROPOSTA-PEDAGOGICA.md) e o [guia do 
     └── GUIA-DO-PROFESSOR.md
 ```
 
-## Publicação no GitHub
-
-O nome `oficina_das_fitas_mdc.html` é descritivo e foi preservado como arquivo principal. Como o GitHub Pages procura `index.html` na raiz, este projeto inclui uma página inicial mínima que encaminha automaticamente para o jogo.
-
-Para criar o repositório local e enviar os arquivos:
-
-```powershell
-git init
-git add index.html oficina_das_fitas_mdc.html README.md .gitignore docs
-git commit -m "Publica Oficina das Fitas"
-git branch -M main
-git remote add origin https://github.com/SEU-USUARIO/aprendendo-maximo-divisor-comum.git
-git push -u origin main
-```
-
-Depois, no repositório do GitHub, abra **Settings → Pages**, escolha **Deploy from a branch**, selecione a branch `main` e a pasta `/(root)`. A página ficará disponível no endereço informado pelo GitHub Pages.
-
 ## Desenvolvimento local
 
-Não há instalação, compilação ou servidor obrigatório. Basta abrir o arquivo HTML em um navegador moderno. Se preferir usar um servidor local, qualquer servidor estático serve; ele não deve ser necessário para o funcionamento do jogo.
+Não há instalação, compilação ou servidor obrigatório. Abra `index.html` em um navegador moderno. Todo o HTML, CSS e JavaScript do jogo está no arquivo `missao_kits_da_festa.html`.
 
-## Privacidade
+## Publicação
 
-O progresso é salvo apenas no `localStorage` do navegador usado. Nenhum dado é enviado a servidores. A opção de reiniciar progresso remove esse registro local.
+O repositório público está em [marcelo7bastos/aprendendo-maximo-divisor-comum](https://github.com/marcelo7bastos/aprendendo-maximo-divisor-comum). O GitHub Pages publica a raiz da branch `main`.
 
-## Licença e contribuições
+Para enviar alterações futuras:
 
-Este repositório ainda não define uma licença de reutilização nem um processo formal de contribuições. Antes de torná-lo público para colaboração externa, o titular deve escolher uma licença e, se necessário, acrescentar instruções de contribuição.
+```powershell
+git add .
+git commit -m "Descreva a alteração"
+git push
+```
+
+## Licença
+
+Este repositório ainda não define uma licença de reutilização. Antes de receber contribuições externas, o titular deve escolher uma licença apropriada.

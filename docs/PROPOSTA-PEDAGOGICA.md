@@ -1,83 +1,76 @@
-# Proposta pedagógica — Oficina das Fitas
+# Proposta pedagógica — Missão Kits da Festa
 
 ## Finalidade
 
-**Oficina das Fitas** é um recurso digital para introduzir o Máximo Divisor Comum (MDC) a estudantes, preferencialmente entre 8 e 12 anos, sem partir de regra, algoritmo ou notação formal. A atividade apresenta três fitas com comprimentos distintos e propõe uma tarefa concreta: preparar pedaços do mesmo tamanho, sem desperdício, usando o maior pedaço possível.
+**Missão Kits da Festa** apresenta o Máximo Divisor Comum a crianças, preferencialmente entre 8 e 12 anos, por meio de uma situação próxima: preparar kits iguais para uma festa escolar.
 
-O objetivo matemático é que o estudante reconheça que:
+Há três tipos de item no estoque — maçãs, biscoitos e adesivos — e todos devem ser distribuídos. A criança procura o maior número de kits idênticos que pode montar sem deixar nada sobrando.
 
-1. um tamanho só serve quando divide todos os comprimentos sem resto;
-2. vários tamanhos podem servir ao mesmo tempo;
-3. o problema pede o maior entre os tamanhos comuns;
-4. essa ideia recebe o nome de Máximo Divisor Comum.
+O objetivo é perceber que:
+
+1. uma quantidade de kits só funciona quando divide exatamente todos os estoques;
+2. várias quantidades podem funcionar;
+3. quanto mais kits válidos, mais crianças recebem materiais iguais;
+4. o maior número que funciona recebe o nome de Máximo Divisor Comum.
 
 ## Princípio de aprendizagem
 
-O jogo organiza a descoberta nesta sequência:
+O jogo segue a sequência:
 
 > experimentar → observar → testar → errar → comparar → descobrir → nomear → calcular
 
-Isso evita que a sigla MDC apareça como uma resposta a memorizar antes que a criança compreenda a necessidade que ela resolve. A tentativa que deixa sobra é uma evidência visual útil: não é tratada como erro punitivo, mas como informação para orientar o próximo teste.
+A sigla MDC não é o ponto de partida. Primeiro, a criança observa o efeito de suas decisões. Uma sobra é informação útil para a próxima tentativa, não uma punição.
 
-## Narrativa e mecânica
+## Mecânica
 
-O estudante atua como **Mestre das Medidas** de uma oficina. Para cada missão:
+Para cada missão, a criança:
 
-1. observa os comprimentos das três fitas;
-2. escolhe um tamanho de pedaço;
-3. testa o corte e vê grupos completos e eventuais sobras;
-4. quando encontra um divisor comum, investiga se há outro maior;
-5. confirma sua hipótese;
-6. só então recebe a explicação formal: `MDC(a, b, c) = g`.
+1. confere as quantidades de maçãs, biscoitos e adesivos;
+2. escolhe quantos kits iguais deseja montar;
+3. vê quanto de cada item entraria em cada kit;
+4. identifica visualmente os itens que sobrariam;
+5. quando nada sobra, investiga se consegue montar mais kits;
+6. confirma o maior número possível;
+7. relaciona sua descoberta à notação `MDC(a, b, c) = g`.
 
-O retorno visual deve ser acompanhado de linguagem simples. Por exemplo: “18 deixa sobra de 2 unidades” e uma região final destacada na fita. Quando o tamanho funciona, o jogo não encerra imediatamente; pergunta se ainda pode existir um pedaço maior.
+Exemplo: com 12 maçãs, 18 biscoitos e 30 adesivos, quatro kits deixam dois biscoitos e dois adesivos no estoque. Seis kits recebem 2 maçãs, 3 biscoitos e 5 adesivos cada, sem sobra. Portanto, `MDC(12, 18, 30) = 6`.
 
-## Progressão sugerida
+## Progressão
 
-| Etapa | Foco | Apoio oferecido |
+| Etapa | Pergunta principal | Apoio |
 | --- | --- | --- |
-| 1. Descoberta visual | Agrupar fitas e reconhecer sobra | Blocos e mensagens concretas; sem sigla MDC |
-| 2. Descobrindo padrões | Relacionar grupos, divisão e resto | Resultado de cada teste e comparação entre tentativas |
-| 3. Conhecendo o MDC | Nomear o maior divisor comum | Notação MDC, divisores comuns e divisões exatas |
-| 4. Pensando sem os blocos | Generalizar o raciocínio | Visualização sob demanda e maior autonomia |
+| 1. Primeiros kits | “Todos receberam a mesma quantidade?” | Itens, cartões de kit e sobra destacados |
+| 2. Comparação | “Essa quantidade funciona para os três estoques?” | Registro das tentativas |
+| 3. Maior quantidade | “Podemos atender mais crianças?” | Confirmação separada do resultado |
+| 4. Formalização | “Que cálculo explica a montagem?” | Divisão, divisores comuns e notação MDC |
 
-A trilha inicial contém dez cartas de dificuldade gradual. Ela funciona como porta de entrada; a criança pode revisitar cartas anteriores para consolidar estratégias.
+## Estoques de até 1.000 itens
 
-## Laboratório e números até 1.000
+O laboratório aceita três números inteiros de 2 a 1.000. A criança pode digitar diretamente o número de kits ou usar controles de `−1`, `+1`, `−10` e `+10`.
 
-O laboratório permite informar três números inteiros entre **2 e 1.000**. Esse intervalo amplia a investigação sem exigir que a pessoa avance pelo seletor uma unidade por vez. Para o tamanho do pedaço, a interface deve oferecer entrada numérica direta, controles de `−1`, `+1`, `−10` e `+10`, além do teclado. O valor válido do corte vai de 1 até o menor comprimento das três fitas.
+- **Até 100 itens:** cada unidade aparece como uma marca no estoque.
+- **De 101 a 1.000:** os três estoques usam uma escala comum com no máximo 100 marcas por item.
 
-O limite de 1.000 pede uma representação diferente da usada com valores pequenos. Desenhar mil blocos individuais cria rolagem excessiva, atrapalha a comparação e não acrescenta compreensão. A visualização adaptativa preserva o significado matemático assim:
+Em qualquer escala, os cartões informam a distribuição exata: quantidade de kits, itens por kit e sobra. A compactação visual não altera nem esconde o resultado matemático.
 
-- **De 2 a 100:** blocos unitários, com a última unidade de cada grupo marcada.
-- **De 101 a 1.000:** fita em escala comum com, no máximo, 100 marcas por fita, indicação compacta dos grupos completos e uma sobra colorida proporcionalmente separada.
+## Modo surpresa
 
-Em todos os níveis de visualização, o texto deve declarar a operação, por exemplo: `840 = 7 grupos de 120` ou `845 = 7 grupos de 120 e sobra 5`. A compactação nunca pode esconder uma sobra nem alterar o resultado do teste.
+O gerador começa por um MDC-alvo `g` e multiplica esse valor por três números cujo MDC é 1. Assim, o resultado real é conhecido internamente sem ser revelado à criança.
 
-## Modo aleatório
-
-O modo aleatório serve para prática, recuperação e ampliação, sem substituir a sequência guiada. Um conjunto aleatório pedagogicamente adequado deve:
-
-1. escolher um MDC-alvo `g` compatível com o intervalo de 2 a 1.000;
-2. gerar multiplicadores positivos `p`, `q` e `r` cuja combinação tenha MDC igual a 1;
-3. criar os comprimentos `g×p`, `g×q` e `g×r`;
-4. descartar resultados repetidos, triviais ou superiores a 1.000;
-5. variar a dificuldade pelo tamanho do MDC, pelos multiplicadores e pelo grau de apoio visual.
-
-Esse procedimento garante que o MDC do desafio seja exatamente `g`, sem expor a resposta ao estudante. O gerador deve evitar que os três números sejam iguais e deve preferir desafios com MDC maior que 1, exceto quando a intenção for trabalhar o caso especial `MDC = 1`.
+O modo evita estoques repetidos e permite limites de 60, 100, 300 ou 1.000. Por padrão, o MDC é maior que 1. O caso `MDC = 1` pode ser incluído como desafio avançado.
 
 ## Avaliação formativa
 
-O professor pode observar evidências em vez de apenas a resposta final:
+Evidências de aprendizagem incluem:
 
-- a criança verifica todas as fitas antes de concluir;
-- interpreta corretamente a sobra;
-- diferencia “funciona” de “é o maior que funciona”;
-- justifica uma tentativa com divisão, grupos ou lista de divisores;
-- transfere a estratégia para um desafio sem blocos.
+- verificar os três estoques antes de confirmar;
+- explicar por que determinada quantidade deixou sobra;
+- diferenciar “funciona” de “é o maior número que funciona”;
+- justificar a solução usando divisão ou divisores;
+- transferir a estratégia para um estoque maior.
 
-Estrelas, tentativas e dicas são indicadores de percurso. Não devem ser usados isoladamente para atribuir nota, porque explorar alternativas faz parte da aprendizagem pretendida.
+Estrelas e pontos registram o percurso, mas não devem substituir a observação das estratégias utilizadas.
 
-## Inclusão e acessibilidade
+## Acessibilidade
 
-O jogo deve manter texto explícito junto às cores e ícones, oferecer contraste suficiente, controles grandes e operação por teclado. A informação essencial não pode depender somente de animação, cor ou quantidade de blocos. Para telas pequenas e números altos, a fita em escala e as operações escritas são essenciais para preservar a legibilidade.
+A informação essencial aparece em texto, símbolos e formas, sem depender apenas de cores. Os controles são grandes, aceitam teclado e se adaptam a telas pequenas. Animações e elementos festivos apoiam a compreensão sem competir com os estoques, kits e sobras.
